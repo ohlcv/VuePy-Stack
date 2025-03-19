@@ -1,8 +1,12 @@
-# Electron-Vue-Python 客户端
+# Electron-Vue-Python 客户端模块
 
-这是基于Electron-Vue-Python框架的客户端模块，集成了现代前端和Python后端技术，为开发强大的跨平台桌面应用提供基础。本README详细说明了当前已集成的技术栈和可以进一步集成的技术栈。
+本客户端模块是Electron-Vue-Python全栈应用框架的核心组件，展示了如何将现代前端技术与Python后端无缝集成，构建功能强大的跨平台桌面应用。此模块采用模块化设计，可作为您自己项目的起点，轻松替换内置的加密货币网格交易系统示例为任何业务逻辑。
 
-## 已集成技术栈
+> **重要说明**：本模块中实现的加密货币网格交易功能**仅作为示例**，展示框架的能力和最佳实践。您可以完全替换这些组件，实现自己的业务逻辑。
+
+## 完整集成技术栈
+
+本客户端模块已集成以下技术，为您的开发提供坚实基础：
 
 ### 前端技术
 | 技术                                          | 版本  | 用途                                 |
@@ -32,7 +36,28 @@
 | [npm](https://www.npmjs.com/)                   | 最新版 | JavaScript包管理器                   |
 | [electron-builder](https://www.electron.build/) | 最新版 | Electron应用打包工具                 |
 
-## 可扩展/待集成技术栈
+## 替换示例实现为您的应用
+
+本客户端模块的设计使得替换内置的加密货币网格交易示例变得简单直接：
+
+1. **替换业务逻辑**：
+   - 修改`src/python/`目录中的Python脚本，实现您自己的后端逻辑
+   - 调整`src/renderer/`目录中的Vue组件，构建您的用户界面
+   - 更新`src/main/`中的Electron配置，自定义应用行为
+
+2. **修改应用配置**：
+   - 编辑`package.json`更新应用名称、版本和描述
+   - 替换`assets/`中的图标和品牌资源
+   - 调整`electron-builder`配置定制安装程序
+
+3. **保留框架核心**：
+   - 通信桥接系统（Electron-Python通信）
+   - 环境配置和构建脚本
+   - 已集成的国际化和主题系统
+
+## 可扩展技术栈
+
+除了已集成的技术外，您可以根据项目需求轻松添加更多技术：
 
 ### 前端扩展
 | 技术                                    | 建议版本 | 潜在用途                             |
@@ -62,15 +87,18 @@
 | [Docker Compose](https://docs.docker.com/compose/)    | 最新版   | 多容器Docker应用定义和运行   |
 | [GitHub Actions](https://github.com/features/actions) | 最新版   | CI/CD自动化工作流            |
 
-### 加密货币相关技术
-| 技术                                                                                | 建议版本 | 潜在用途                      |
-| ----------------------------------------------------------------------------------- | -------- | ----------------------------- |
-| [ccxt](https://github.com/ccxt/ccxt)                                                | 最新版   | 加密货币交易所API统一库       |
-| [Web3.js](https://web3js.readthedocs.io/)                                           | 最新版   | 以太坊JavaScript API          |
-| [ethers.js](https://docs.ethers.io/)                                                | 最新版   | 以太坊钱包实现和工具          |
-| [TradingView Lightweight Charts](https://github.com/tradingview/lightweight-charts) | 最新版   | 金融图表库，替代或补充ECharts |
+## 适用场景举例
 
-## 集成新技术栈指南
+本客户端模块适用于多种应用场景，而不仅限于加密货币交易：
+
+1. **数据科学应用**：结合Python数据分析库与Vue可视化
+2. **企业管理工具**：本地数据管理与报表生成
+3. **创意软件**：利用Python处理图像、音频或视频
+4. **教育软件**：交互式学习工具和模拟器
+5. **物联网控制面板**：设备监控和控制界面
+6. **AI应用界面**：机器学习模型的用户友好前端
+
+## 集成新技术指南
 
 ### 前端新技术集成
 1. 安装依赖:
@@ -202,14 +230,6 @@
    thread = threading.Thread(target=heavy_task)
    thread.start()
    ```
-
-## 版本兼容性
-
-添加新技术栈时，请检查版本兼容性:
-
-- 所有Vue相关的库应当兼容Vue 3
-- Python包应兼容Python 3.10+
-- 注意Electron兼容的Node.js版本范围 
 
 ## 已集成功能使用指南
 
