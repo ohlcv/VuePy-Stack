@@ -5,16 +5,18 @@
 ## 已集成技术栈
 
 ### 前端技术
-| 技术                                          | 版本 | 用途                                 |
-| --------------------------------------------- | ---- | ------------------------------------ |
-| [Electron](https://www.electronjs.org/)       | 24+  | 跨平台桌面应用框架，提供本地化能力   |
-| [Vue 3](https://vuejs.org/)                   | 3.3+ | 响应式UI框架，采用Composition API    |
-| [TypeScript](https://www.typescriptlang.org/) | 5.0+ | 类型安全的JavaScript超集             |
-| [Ant Design Vue](https://antdv.com/)          | 4.0+ | 企业级UI组件库                       |
-| [Vite](https://vitejs.dev/)                   | 4.0+ | 现代前端构建工具，提供快速的开发体验 |
-| [Pinia](https://pinia.vuejs.org/)             | 2.1+ | Vue状态管理库，Vue官方推荐           |
-| [Vue Router](https://router.vuejs.org/)       | 4.0+ | Vue官方路由管理器                    |
-| [ECharts](https://echarts.apache.org/)        | 5.4+ | 强大的数据可视化图表库               |
+| 技术                                          | 版本  | 用途                                 |
+| --------------------------------------------- | ----- | ------------------------------------ |
+| [Electron](https://www.electronjs.org/)       | 24+   | 跨平台桌面应用框架，提供本地化能力   |
+| [Vue 3](https://vuejs.org/)                   | 3.3+  | 响应式UI框架，采用Composition API    |
+| [TypeScript](https://www.typescriptlang.org/) | 5.0+  | 类型安全的JavaScript超集             |
+| [Ant Design Vue](https://antdv.com/)          | 4.0+  | 企业级UI组件库                       |
+| [Vite](https://vitejs.dev/)                   | 4.0+  | 现代前端构建工具，提供快速的开发体验 |
+| [Pinia](https://pinia.vuejs.org/)             | 2.1+  | Vue状态管理库，Vue官方推荐           |
+| [Vue Router](https://router.vuejs.org/)       | 4.0+  | Vue官方路由管理器                    |
+| [ECharts](https://echarts.apache.org/)        | 5.4+  | 强大的数据可视化图表库               |
+| [Vue I18n](https://vue-i18n.intlify.dev/)     | 9.0+  | Vue国际化解决方案，支持多语言切换    |
+| [VueUse](https://vueuse.org/)                 | 13.0+ | Vue组合式API工具集，提供常用功能钩子 |
 
 ### 后端技术
 | 技术                                                       | 版本   | 用途                                 |
@@ -33,14 +35,12 @@
 ## 可扩展/待集成技术栈
 
 ### 前端扩展
-| 技术                                      | 建议版本 | 潜在用途                             |
-| ----------------------------------------- | -------- | ------------------------------------ |
-| [TailwindCSS](https://tailwindcss.com/)   | 3.0+     | 实用优先的CSS框架，增强UI开发效率    |
-| [Vue I18n](https://vue-i18n.intlify.dev/) | 9.0+     | Vue国际化解决方案，支持多语言        |
-| [VueUse](https://vueuse.org/)             | 最新版   | Vue组合式API工具集                   |
-| [D3.js](https://d3js.org/)                | 最新版   | 强大的数据可视化库，适合复杂图表需求 |
-| [jest](https://jestjs.io/)                | 最新版   | JavaScript测试框架，前端单元测试     |
-| [Cypress](https://www.cypress.io/)        | 最新版   | 现代化E2E测试框架                    |
+| 技术                                    | 建议版本 | 潜在用途                             |
+| --------------------------------------- | -------- | ------------------------------------ |
+| [TailwindCSS](https://tailwindcss.com/) | 3.0+     | 实用优先的CSS框架，增强UI开发效率    |
+| [D3.js](https://d3js.org/)              | 最新版   | 强大的数据可视化库，适合复杂图表需求 |
+| [jest](https://jestjs.io/)              | 最新版   | JavaScript测试框架，前端单元测试     |
+| [Cypress](https://www.cypress.io/)      | 最新版   | 现代化E2E测试框架                    |
 
 ### 后端扩展
 | 技术                                                            | 建议版本 | 潜在用途                                   |
@@ -210,3 +210,78 @@
 - 所有Vue相关的库应当兼容Vue 3
 - Python包应兼容Python 3.10+
 - 注意Electron兼容的Node.js版本范围 
+
+## 已集成功能使用指南
+
+### Vue I18n 国际化
+
+项目已集成Vue I18n实现多语言支持，当前支持中文和英文：
+
+1. **语言配置文件位置**：`client/src/renderer/i18n/index.ts`
+
+2. **切换语言**：
+   ```typescript
+   // 在组件中使用
+   import { useI18n } from 'vue-i18n';
+   
+   const { locale } = useI18n();
+   // 切换到英文
+   locale.value = 'en';
+   // 切换到中文
+   locale.value = 'zh';
+   ```
+
+3. **使用翻译**：
+   ```vue
+   <template>
+     <!-- 使用方式1：通过$t方法 -->
+     <div>{{ $t('common.welcome') }}</div>
+     
+     <!-- 使用方式2：在setup中通过t方法 -->
+     <div>{{ t('common.dashboard') }}</div>
+   </template>
+   
+   <script setup lang="ts">
+   import { useI18n } from 'vue-i18n';
+   
+   const { t } = useI18n();
+   </script>
+   ```
+
+4. **添加新语言**：修改`i18n/index.ts`文件添加新的语言包。
+
+### VueUse 组合式API
+
+项目集成了VueUse提供的实用组合式API：
+
+1. **主题切换**：使用`useThemeMode`实现深色/浅色主题：
+   ```typescript
+   import { useThemeMode } from '../composables/useAppComposables';
+   
+   const { isDark, toggleDark } = useThemeMode();
+   // 检查当前是否深色模式
+   console.log(isDark.value);
+   // 切换主题
+   toggleDark();
+   ```
+
+2. **设备检测**：使用`useDeviceDetection`实现响应式布局：
+   ```typescript
+   import { useDeviceDetection } from '../composables/useAppComposables';
+   
+   const { isMobile, isTablet, isDesktop } = useDeviceDetection();
+   // 根据设备类型适配UI
+   ```
+
+3. **本地存储**：使用`useAppSettings`管理应用配置：
+   ```typescript
+   import { useAppSettings } from '../composables/useAppComposables';
+   
+   const { apiKeys, strategyDefaults } = useAppSettings();
+   // 读取配置
+   console.log(apiKeys.value.binance);
+   // 更新配置
+   apiKeys.value.binance = 'new-api-key';
+   ```
+
+4. **自定义组件**：`ThemeLanguageSettings.vue`组件提供了语言和主题切换的UI示例。 

@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="app-layout">
+  <a-layout class="app-layout" :class="{ 'dark-theme': isDark }">
     <!-- 侧边栏 -->
     <a-layout-sider
       v-model:collapsed="collapsed"
@@ -14,31 +14,31 @@
       
       <a-menu
         v-model:selectedKeys="selectedKeys"
-        theme="dark"
+        :theme="isDark ? 'dark' : 'light'"
         mode="inline"
       >
         <a-menu-item key="home">
           <router-link to="/">
             <home-outlined />
-            <span>首页</span>
+            <span>{{ $t('common.dashboard') }}</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="strategies">
           <router-link to="/strategies">
             <fund-outlined />
-            <span>策略管理</span>
+            <span>{{ $t('common.strategies') }}</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="monitor">
           <router-link to="/monitor">
             <bar-chart-outlined />
-            <span>交易监控</span>
+            <span>{{ $t('common.trades') }}</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="settings">
           <router-link to="/settings">
             <setting-outlined />
-            <span>系统设置</span>
+            <span>{{ $t('common.settings') }}</span>
           </router-link>
         </a-menu-item>
       </a-menu>
@@ -60,6 +60,30 @@
         />
         
         <div class="right-menu">
+          <!-- 主题切换 -->
+          <a-tooltip>
+            <template #title>{{ isDark ? $t('settings.lightMode') : $t('settings.darkMode') }}</template>
+            <a-button shape="circle" @click="toggleDark()">
+              <template #icon>
+                <component :is="isDark ? 'BulbOutlined' : 'BulbFilled'" />
+              </template>
+            </a-button>
+          </a-tooltip>
+          
+          <!-- 语言切换 -->
+          <a-dropdown>
+            <a-button type="text">
+              {{ locale === 'zh' ? '中文' : 'English' }}
+              <down-outlined />
+            </a-button>
+            <template #overlay>
+              <a-menu @click="changeLocale">
+                <a-menu-item key="zh">中文</a-menu-item>
+                <a-menu-item key="en">English</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+          
           <a-badge dot>
             <bell-outlined style="font-size: 18px" />
           </a-badge>
@@ -89,7 +113,7 @@
       
       <!-- 底部 -->
       <a-layout-footer class="footer">
-        CryptoGrid &copy; {{ new Date().getFullYear() }} - 加密货币网格交易系统
+        CryptoGrid &copy; {{ new Date().getFullYear() }} - {{ $t('common.welcome') }}
       </a-layout-footer>
     </a-layout>
   </a-layout>
@@ -98,6 +122,8 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useThemeMode } from './composables/useAppComposables';
 import {
   HomeOutlined,
   FundOutlined,
@@ -107,7 +133,10 @@ import {
   MenuFoldOutlined,
   BellOutlined,
   UserOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  BulbOutlined,
+  BulbFilled,
+  DownOutlined
 } from '@ant-design/icons-vue';
 
 export default defineComponent({
@@ -121,12 +150,21 @@ export default defineComponent({
     MenuFoldOutlined,
     BellOutlined,
     UserOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    BulbOutlined,
+    BulbFilled,
+    DownOutlined
   },
   setup() {
     const collapsed = ref(false);
     const selectedKeys = ref(['home']);
     const route = useRoute();
+    
+    // 使用VueUse的主题模式
+    const { isDark, toggleDark } = useThemeMode();
+    
+    // 使用Vue I18n
+    const { locale } = useI18n();
     
     // 根据路由更新菜单选中项
     watch(
@@ -138,15 +176,45 @@ export default defineComponent({
       { immediate: true }
     );
     
+    // 切换语言
+    const changeLocale = (e: any) => {
+      locale.value = e.key;
+    };
+    
     return {
       collapsed,
-      selectedKeys
+      selectedKeys,
+      isDark,
+      toggleDark,
+      locale,
+      changeLocale
     };
   }
 });
 </script>
 
 <style>
+:root {
+  --primary-color: #1890ff;
+  --bg-color: #f0f2f5;
+  --text-color: rgba(0, 0, 0, 0.85);
+  --component-bg: #fff;
+  --border-color: #d9d9d9;
+}
+
+.dark-theme {
+  --primary-color: #177ddc;
+  --bg-color: #141414;
+  --text-color: rgba(255, 255, 255, 0.85);
+  --component-bg: #1f1f1f;
+  --border-color: #434343;
+}
+
+body {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
 .app-layout {
   min-height: 100vh;
 }
@@ -170,7 +238,7 @@ export default defineComponent({
 }
 
 .header {
-  background: #fff;
+  background: var(--component-bg);
   padding: 0 16px;
   display: flex;
   align-items: center;
@@ -184,7 +252,7 @@ export default defineComponent({
 }
 
 .trigger:hover {
-  color: #1890ff;
+  color: var(--primary-color);
 }
 
 .right-menu {
@@ -196,11 +264,21 @@ export default defineComponent({
 .content {
   margin: 24px 16px;
   padding: 24px;
-  background: #fff;
+  background: var(--component-bg);
   min-height: 280px;
 }
 
 .footer {
   text-align: center;
+  background: var(--component-bg);
+  color: var(--text-color);
+}
+
+.dark-theme .ant-layout {
+  background: var(--bg-color);
+}
+
+.dark-theme .ant-layout-sider {
+  background: #001529;
 }
 </style> 
