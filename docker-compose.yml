@@ -1,0 +1,95 @@
+services:
+  # 开发环境
+  dev:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: builder
+      args:
+        # 使用国内源配置
+        - NODE_IMAGE=node:20-slim
+        # 包管理源配置 - 使用国内源
+        - NPM_REGISTRY=https://registry.npmmirror.com
+        - PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+        - PIP_TRUSTED_HOST=mirrors.aliyun.com
+    volumes:
+      - ./client:/app
+      - ./client/node_modules:/app/node_modules
+      - ./client/logs:/app/logs
+      - ./client/data:/app/data
+      - ./client/strategy_files:/app/strategy_files
+      - ./client/scripts:/app/scripts
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    networks:
+      - crypto_network
+    privileged: true
+
+  # 测试环境
+  test:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: builder
+      args:
+        # 使用国内源配置
+        - NODE_IMAGE=node:20-slim
+        # 包管理源配置 - 使用国内源
+        - NPM_REGISTRY=https://registry.npmmirror.com
+        - PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+        - PIP_TRUSTED_HOST=mirrors.aliyun.com
+    volumes:
+      - ./client:/app
+      - ./client/node_modules:/app/node_modules
+      - ./client/logs:/app/logs
+      - ./client/data:/app/data
+      - ./client/strategy_files:/app/strategy_files
+      - ./client/scripts:/app/scripts
+    environment:
+      - NODE_ENV=development
+    command: npm run test-flow
+    privileged: true
+    networks:
+      - crypto_network
+
+  # 打包环境
+  package:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      target: packager
+      args:
+        # 使用国内源配置
+        - NODE_IMAGE=node:20-slim
+        # 包管理源配置 - 使用国内源
+        - NPM_REGISTRY=https://registry.npmmirror.com
+        - PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+        - PIP_TRUSTED_HOST=mirrors.aliyun.com
+    volumes:
+      - ./dist:/app/dist
+      - ./client/scripts:/app/scripts
+    environment:
+      - NODE_ENV=production
+    command: npm run package
+    networks:
+      - crypto_network
+  # Hummingbot测试容器 - 暂时注释掉
+  # hummingbot:
+  #   image: hummingbot/hummingbot:latest
+  #   # 可通过 ./start.sh update-docker 命令更新Docker源配置
+  #   volumes:
+  #     - ./client/strategy_files:/conf
+  #   environment:
+  #     - CONFIG_PASSWORD=
+  #   tty: true
+  #   stdin_open: true
+  #   networks:
+  #     - crypto_network
+
+  # 添加网络配置
+networks:
+  crypto_network:
+    driver: bridge

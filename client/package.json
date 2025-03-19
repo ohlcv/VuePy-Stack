@@ -1,0 +1,86 @@
+{
+    "name": "crypto-grid-mvp",
+    "version": "1.0.0",
+    "main": "src/main/index.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "electron": "electron .",
+        "electron:dev": "cross-env NODE_ENV=development electron .",
+        "package": "electron-builder --win --x64",
+        "check-env": "node scripts/check-python-env.js",
+        "test-flow": "node scripts/test-flow.js"
+    },
+    "dependencies": {
+        "ant-design-vue": "^4.0.0",
+        "echarts": "^5.4.0",
+        "pinia": "^2.1.0",
+        "python-shell": "^5.0.0",
+        "sqlite3": "^5.1.6",
+        "vue": "^3.3.0",
+        "vue-router": "^4.2.0",
+        "winston": "^3.10.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^4.6.2",
+        "cross-env": "^7.0.3",
+        "electron": "^24.0.0",
+        "electron-builder": "^24.0.0",
+        "electron-log": "^5.0.0",
+        "typescript": "^5.0.0",
+        "vite": "^4.5.9"
+    },
+    "build": {
+        "appId": "com.example.cryptogrid",
+        "productName": "CryptoGrid",
+        "win": {
+            "target": "nsis",
+            "icon": "build/icon.ico"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true
+        },
+        "files": [
+            "dist/**/*",
+            "src/main/**/*",
+            "src/python/**/*"
+        ],
+        "extraResources": [
+            {
+                "from": "src/python",
+                "to": "python",
+                "filter": [
+                    "**/*"
+                ]
+            },
+            {
+                "from": "strategy_files",
+                "to": "strategy_files",
+                "filter": [
+                    "**/*"
+                ]
+            },
+            {
+                "from": "node_modules/python-shell",
+                "to": "node_modules/python-shell"
+            }
+        ],
+        "extraFiles": [
+            {
+                "from": "scripts",
+                "to": "scripts",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "directories": {
+            "buildResources": "build",
+            "output": "dist"
+        },
+        "publish": null
+    }
+}
